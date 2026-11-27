@@ -9,7 +9,7 @@ import { Roll } from "@/components/site/Roll";
 import { TrainerMedia } from "@/components/site/TrainerMedia";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { JsonLd, personSchema } from "@/lib/jsonld";
-import { trainerPath, trainerWhatsappLink } from "@/lib/helpers";
+import { absoluteUrl, trainerPath, trainerWhatsappLink } from "@/lib/helpers";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -48,8 +48,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale: site.locale,
       siteName: site.name,
       type: "profile",
-      ...(t.photo ? { images: [{ url: t.photo, alt: `Foto ${t.name}` }] } : {}),
+      images: t.photo
+        ? [{ url: t.photo, alt: `Foto ${t.name}` }]
+        : [{ url: site.ogImage, width: 1200, height: 630, alt: title }],
     },
+    twitter: { card: "summary_large_image", title, description, images: [t.photo || site.ogImage] },
   };
 }
 
@@ -64,7 +67,21 @@ export default async function TrainerPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={{ "@context": "https://schema.org", ...personSchema(t) }} />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            personSchema(t),
+            {
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: site.name, item: absoluteUrl("/") },
+                { "@type": "ListItem", position: 2, name: t.name, item: absoluteUrl(trainerPath(t)) },
+              ],
+            },
+          ],
+        }}
+      />
 
       <article className="profile">
         <section className="p-hero">

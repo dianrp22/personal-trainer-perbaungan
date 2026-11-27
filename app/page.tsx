@@ -32,7 +32,9 @@ export function generateMetadata(): Metadata {
       locale: site.locale,
       siteName: site.name,
       type: "website",
+      images: [{ url: site.ogImage, width: 1200, height: 630, alt: site.title }],
     },
+    twitter: { card: "summary_large_image", title: site.title, description: site.description, images: [site.ogImage] },
   };
 }
 
@@ -127,6 +129,14 @@ export default function HomePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${absoluteUrl("/")}#website`,
+        name: site.name,
+        url: absoluteUrl("/"),
+        inLanguage: "id-ID",
+        description: site.description,
+      },
       {
         "@type": "ItemList",
         name: `Daftar Personal Trainer di ${site.city}`,

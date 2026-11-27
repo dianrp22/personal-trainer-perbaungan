@@ -29,29 +29,63 @@ export function Roster({ trainers }: { trainers: Trainer[] }) {
     const yTo = gsap.quickTo(el, "y", { duration: 0.6, ease: "power3" });
     const rTo = gsap.quickTo(el, "rotate", { duration: 0.8, ease: "power3" });
     let lastX = 0;
+    let shown = false;
+    const pointer = { x: -1, y: -1 };
 
-    const move = (e: PointerEvent) => {
-      xTo(e.clientX);
-      yTo(e.clientY);
-      rTo(gsap.utils.clamp(-14, 14, (e.clientX - lastX) * 0.6));
-      lastX = e.clientX;
+    const show = (x: number, y: number) => {
+      if (shown) return;
+      shown = true;
+      gsap.set(el, { x, y });
+      lastX = x;
+      gsap.to(el, { scale: 1, duration: 0.6, ease: "expo.out", overwrite: "auto" });
     };
-    const enter = (e: PointerEvent) => {
-      gsap.set(el, { x: e.clientX, y: e.clientY });
-      lastX = e.clientX;
-      gsap.to(el, { scale: 1, duration: 0.6, ease: "expo.out" });
-    };
-    const leave = () => {
-      gsap.to(el, { scale: 0, duration: 0.4, ease: "expo.in" });
+    const hide = () => {
+      if (!shown) return;
+      shown = false;
+      gsap.to(el, { scale: 0, duration: 0.35, ease: "expo.in", overwrite: "auto" });
       setActive(-1);
     };
-    list.addEventListener("pointermove", move);
-    list.addEventListener("pointerenter", enter);
-    list.addEventListener("pointerleave", leave);
+
+    // Satu sumber kebenaran: apakah titik kursor sekarang ada di atas sebuah baris?
+    // Dicek saat kursor bergerak DAN saat halaman di-scroll (scroll tidak memicu
+    // pointerleave, sehingga kartu dulu bisa "tertinggal" di section lain).
+    const sync = () => {
+      if (pointer.x < 0) return;
+      const hit = document.elementFromPoint(pointer.x, pointer.y);
+      const row = hit?.closest?.(".roster-row");
+      if (!row || !list.contains(row)) {
+        hide();
+        return;
+      }
+      const i = Array.prototype.indexOf.call(list.children, row);
+      setActive(i);
+      show(pointer.x, pointer.y);
+    };
+
+    const move = (e: PointerEvent) => {
+      pointer.x = e.clientX;
+      pointer.y = e.clientY;
+      if (shown) {
+        xTo(e.clientX);
+        yTo(e.clientY);
+        rTo(gsap.utils.clamp(-14, 14, (e.clientX - lastX) * 0.6));
+        lastX = e.clientX;
+      }
+      sync();
+    };
+    const out = () => {
+      pointer.x = -1;
+      hide();
+    };
+
+    window.addEventListener("pointermove", move, { passive: true });
+    window.addEventListener("scroll", sync, { passive: true });
+    document.documentElement.addEventListener("pointerleave", out);
     return () => {
-      list.removeEventListener("pointermove", move);
-      list.removeEventListener("pointerenter", enter);
-      list.removeEventListener("pointerleave", leave);
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("scroll", sync);
+      document.documentElement.removeEventListener("pointerleave", out);
+      gsap.killTweensOf(el);
     };
   }, []);
 
@@ -62,7 +96,6 @@ export function Roster({ trainers }: { trainers: Trainer[] }) {
           <li
             key={t.slug}
             className={`roster-row${active === i ? " is-active" : ""}`}
-            onPointerEnter={() => setActive(i)}
           >
             <span className="roster-no">{String(i + 1).padStart(2, "0")}</span>
             <div className="roster-main">

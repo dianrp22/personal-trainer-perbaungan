@@ -24,7 +24,10 @@ export function Cursor() {
     const ry = gsap.quickTo(r, "y", { duration: 0.45, ease: "power3" });
 
     let visible = false;
+    const last = { x: -1, y: -1 };
     const move = (e: PointerEvent) => {
+      last.x = e.clientX;
+      last.y = e.clientY;
       if (!visible) {
         visible = true;
         gsap.set([d, r], { x: e.clientX, y: e.clientY });
@@ -37,8 +40,12 @@ export function Cursor() {
     };
 
     let state = "";
-    const over = (e: PointerEvent) => {
-      const t = e.target as Element | null;
+    const over = (e: PointerEvent) => updateFor(e.target as Element | null);
+    // Scroll tidak memicu pointerover, jadi elemen di bawah kursor dicek ulang saat scroll.
+    const rescan = () => {
+      if (last.x >= 0) updateFor(document.elementFromPoint(last.x, last.y));
+    };
+    const updateFor = (t: Element | null) => {
       const labelled = t?.closest?.<HTMLElement>("[data-cursor]");
       const interactive = t?.closest?.("a, button, summary, [role='button']");
       const next = labelled ? `label:${labelled.dataset.cursor}` : interactive ? "hover" : "";
@@ -71,6 +78,7 @@ export function Cursor() {
     const up = () => gsap.to(r, { scale: 1, duration: 0.4, ease: "elastic.out(1,0.4)" });
 
     window.addEventListener("pointermove", move);
+    window.addEventListener("scroll", rescan, { passive: true });
     document.addEventListener("pointerover", over);
     document.documentElement.addEventListener("pointerleave", leave);
     window.addEventListener("pointerdown", down);
@@ -78,6 +86,7 @@ export function Cursor() {
     return () => {
       document.documentElement.classList.remove("has-cursor");
       window.removeEventListener("pointermove", move);
+      window.removeEventListener("scroll", rescan);
       document.removeEventListener("pointerover", over);
       document.documentElement.removeEventListener("pointerleave", leave);
       window.removeEventListener("pointerdown", down);

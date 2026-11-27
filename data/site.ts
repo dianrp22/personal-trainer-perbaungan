@@ -13,6 +13,10 @@ export const site = {
   region: "Sumatera Utara",
   country: "ID",
   locale: "id_ID",
+  // Gambar preview saat link dibagikan (WhatsApp, Facebook, Google). 1200×630.
+  ogImage: "/og.jpg",
+  // Verifikasi Google Search Console (metode HTML tag). Jangan dihapus.
+  googleVerification: "b4re-nR79VIJR4KhT8QbxTr9yoxC-5y-LtbRxtqA9SQ",
   // TODO (opsional): nomor WhatsApp admin, format 62xxx. Kalau diisi, muncul
   // section "Daftarkan diri Anda" untuk trainer yang ingin dicantumkan.
   adminWhatsapp: "",

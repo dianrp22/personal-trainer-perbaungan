@@ -27,8 +27,11 @@ export const metadata: Metadata = {
     type: "website",
     locale: site.locale,
     siteName: site.name,
+    images: [{ url: site.ogImage, width: 1200, height: 630, alt: site.title }],
   },
+  twitter: { card: "summary_large_image", images: [site.ogImage] },
   formatDetection: { telephone: false },
+  verification: { google: site.googleVerification },
 };
 
 export const viewport: Viewport = {
