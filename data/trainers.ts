@@ -1,6 +1,8 @@
 // Daftar personal trainer. Field yang dikosongkan ("" atau []) tidak ditampilkan di halaman.
 // JANGAN mengisi data yang belum dikonfirmasi trainer (harga, sertifikasi, testimoni, dll).
 
+export type FigureKind = "pria" | "wanita";
+
 export type Trainer = {
   /** Dipakai di URL: /trainer/<slug>/ — huruf kecil, pakai tanda hubung, jangan diubah setelah terindeks Google. */
   slug: string;
@@ -18,6 +20,19 @@ export type Trainer = {
   mapsUrl: string;
   /** URL lengkap Instagram, misalnya "https://www.instagram.com/namaakun/". */
   instagram: string;
+  /** Bentuk badan figur 3D di hero halaman utama. */
+  figure: FigureKind;
+  /**
+   * Foto wajah untuk kepala figur 3D di hero, mis. "/trainers/yusrizal-wajah.jpg".
+   * Foto persegi, wajah lurus menghadap kamera, latar polos abu-abu/putih. Wajib izin trainer.
+   * Kosongkan ("") untuk kepala polos.
+   */
+  heroFace: string;
+  /**
+   * Video untuk kartu di hero (mode "video"), mis. "/trainers/yusrizal-hero.mp4".
+   * Vertikal 4:5 atau 9:16, 5–8 detik, bisa di-loop, < 4 MB. Wajib izin trainer.
+   */
+  heroVideo: string;
 };
 
 export const trainers: Trainer[] = [
@@ -33,19 +48,25 @@ export const trainers: Trainer[] = [
     bio: "Personal trainer di FitCube Perbaungan. Hubungi langsung lewat WhatsApp untuk konsultasi program, jadwal, dan biaya.",
     mapsUrl: "", // TODO: link Google Maps FitCube Perbaungan
     instagram: "", // TODO: URL Instagram Yusrizal (kalau ada)
+    figure: "pria",
+    heroFace: "", // TODO: foto wajah Yusrizal (dengan izinnya), mis. "/trainers/yusrizal-wajah.jpg"
+    heroVideo: "", // TODO: video Yusrizal, mis. "/trainers/yusrizal-hero.mp4"
   },
   {
     slug: "nurmala-sari",
     name: "Nurmala Sari",
     gym: "", // TODO: nama gym
     gymAddress: "", // TODO: alamat gym
-    whatsapp: "", // TODO: nomor WhatsApp format 62xxx
+    whatsapp: "6285270579192",
     photo: "", // TODO: taruh foto di public/trainers/nurmala-sari.jpg lalu isi "/trainers/nurmala-sari.jpg"
     specialties: [], // TODO: spesialisasi sesuai konfirmasi trainer
-    // TODO: setelah gym & WhatsApp diisi, ubah jadi mis. "Personal trainer di [gym] Perbaungan. Hubungi langsung lewat WhatsApp untuk konsultasi program, jadwal, dan biaya."
-    bio: "Personal trainer di Perbaungan, Serdang Bedagai.",
+    // TODO: setelah gym diisi, ubah jadi mis. "Personal trainer di [gym] Perbaungan. Hubungi langsung lewat WhatsApp untuk konsultasi program, jadwal, dan biaya."
+    bio: "Personal trainer di Perbaungan, Serdang Bedagai. Hubungi langsung lewat WhatsApp untuk konsultasi program, jadwal, dan biaya.",
     mapsUrl: "", // TODO: link Google Maps gym
     instagram: "", // TODO: URL Instagram (kalau ada)
+    figure: "wanita",
+    heroFace: "", // TODO: foto wajah Nurmala Sari (dengan izinnya)
+    heroVideo: "", // TODO: video Nurmala Sari
   },
 ];
 
