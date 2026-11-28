@@ -13,6 +13,14 @@ export function trainerWhatsappLink(t: Trainer): string {
   );
 }
 
+/** "6289527345301" → "+62 895-2734-5301" (untuk ditampilkan). */
+export function formatPhone(number: string): string {
+  const d = number.replace(/\D/g, "");
+  if (!d.startsWith("62")) return d;
+  const rest = d.slice(2);
+  return `+62 ${[rest.slice(0, 3), rest.slice(3, 7), rest.slice(7)].filter(Boolean).join("-")}`;
+}
+
 export function initials(name: string): string {
   return name
     .split(/\s+/)
