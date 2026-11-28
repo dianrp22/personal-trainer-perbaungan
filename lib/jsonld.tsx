@@ -32,9 +32,27 @@ export function personSchema(t: Trainer) {
     name: t.name,
     jobTitle: "Personal Trainer",
     url: absoluteUrl(trainerPath(t)),
-    ...(t.bio ? { description: t.bio } : {}),
-    ...(t.photo ? { image: absoluteUrl(t.photo) } : {}),
+    ...(t.about.length || t.bio ? { description: t.about.length ? t.about.join(" ") : t.bio } : {}),
+    ...(t.photo || t.gallery.length
+      ? { image: [t.photo, ...t.gallery].filter(Boolean).map((src) => absoluteUrl(src)) }
+      : {}),
     ...(t.whatsapp ? { telephone: `+${t.whatsapp}` } : {}),
+    ...(t.whatsapp && t.hours
+      ? {
+          contactPoint: {
+            "@type": "ContactPoint",
+            contactType: "customer service",
+            telephone: `+${t.whatsapp}`,
+            availableLanguage: "id",
+            hoursAvailable: {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              opens: t.hours.opens,
+              closes: t.hours.closes,
+            },
+          },
+        }
+      : {}),
     ...(t.specialties.length ? { knowsAbout: t.specialties } : {}),
     ...(t.instagram ? { sameAs: [t.instagram] } : {}),
     workLocation: workLocation(t),

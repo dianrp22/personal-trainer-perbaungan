@@ -11,7 +11,7 @@ export function TrainerMedia({ trainer, eager = false }: { trainer: Trainer; eag
         src={trainer.photo}
         alt={`Foto ${trainer.name}, personal trainer di Perbaungan`}
         width={800}
-        height={800}
+        height={1000}
         loading={eager ? "eager" : "lazy"}
         decoding="async"
       />

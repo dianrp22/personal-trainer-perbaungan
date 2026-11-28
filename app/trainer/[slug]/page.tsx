@@ -4,12 +4,13 @@ import { notFound } from "next/navigation";
 import { site } from "@/data/site";
 import { getTrainer, trainers, type Trainer } from "@/data/trainers";
 import { Marquee } from "@/components/motion/Marquee";
+import { Gallery } from "@/components/site/Gallery";
 import { ArrowIcon, PinIcon } from "@/components/site/Icons";
 import { Roll } from "@/components/site/Roll";
 import { TrainerMedia } from "@/components/site/TrainerMedia";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { JsonLd, personSchema } from "@/lib/jsonld";
-import { absoluteUrl, trainerPath, trainerWhatsappLink } from "@/lib/helpers";
+import { absoluteUrl, formatPhone, trainerPath, trainerWhatsappLink } from "@/lib/helpers";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -28,7 +29,8 @@ function pageDescription(t: Trainer) {
   const contact = t.whatsapp
     ? "Hubungi langsung lewat WhatsApp untuk tanya program, jadwal, dan biaya."
     : "Lihat profil dan informasi kontaknya.";
-  return `${t.name}, personal trainer ${where}, ${site.regency}. ${contact}`;
+  const hours = t.hours ? ` Melatih ${t.hours.label.charAt(0).toLowerCase()}${t.hours.label.slice(1)}.` : "";
+  return `${t.name}, personal trainer ${where}, ${site.regency}.${hours} ${contact}`;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -137,8 +139,36 @@ export default async function TrainerPage({ params }: Props) {
           className="tape tape-a tape-flat"
         />
 
+        {t.gallery.length > 0 && (
+          <section className="sec sec-dark p-gallery-sec" aria-labelledby="galeri">
+            <div className="container">
+              <header className="sec-head">
+                <span className="sec-idx mono" data-reveal>
+                  Galeri · {String(t.gallery.length).padStart(2, "0")} foto
+                </span>
+                <h2 id="galeri" className="sec-title-sm" data-split="lines">
+                  Foto-foto {t.name}
+                </h2>
+              </header>
+              <Gallery name={t.name} photos={t.gallery} />
+            </div>
+          </section>
+        )}
+
         <section className="sec sec-light p-sheet-sec">
           <div className="container">
+            {t.about.length > 0 && (
+              <div className="p-about">
+                <h2 className="sec-title-sm" data-split="lines">
+                  Tentang {t.name}
+                </h2>
+                <div className="p-about-text" data-reveal>
+                  {t.about.map((para) => (
+                    <p key={para.slice(0, 32)}>{para}</p>
+                  ))}
+                </div>
+              </div>
+            )}
             <span className="sec-idx mono" data-reveal>
               Lembar data
             </span>
@@ -161,6 +191,12 @@ export default async function TrainerPage({ params }: Props) {
                   </dd>
                 </div>
               )}
+              {t.hours && (
+                <div>
+                  <dt className="mono">Jadwal melatih</dt>
+                  <dd>{t.hours.label}</dd>
+                </div>
+              )}
               {t.specialties.length > 0 && (
                 <div>
                   <dt className="mono">Spesialisasi</dt>
@@ -175,7 +211,15 @@ export default async function TrainerPage({ params }: Props) {
               )}
               <div>
                 <dt className="mono">Kontak</dt>
-                <dd>{t.whatsapp ? "WhatsApp (tombol di atas)" : "Segera ditambahkan"}</dd>
+                <dd>
+                  {t.whatsapp ? (
+                    <a className="sheet-link" href={trainerWhatsappLink(t)} target="_blank" rel="noopener noreferrer">
+                      WhatsApp {formatPhone(t.whatsapp)}
+                    </a>
+                  ) : (
+                    "Segera ditambahkan"
+                  )}
+                </dd>
               </div>
             </dl>
             <p className="back" data-reveal>

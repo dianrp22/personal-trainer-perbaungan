@@ -14,8 +14,15 @@ export type Trainer = {
   whatsapp: string;
   /** Path foto di folder public, misalnya "/trainers/yusrizal.jpg". */
   photo: string;
+  /** Foto-foto tambahan untuk galeri di halaman profil (urut tampil). */
+  gallery: string[];
   specialties: string[];
+  /** Ringkasan singkat di bagian atas halaman profil (1–2 kalimat). */
   bio: string;
+  /** Deskripsi lengkap di halaman profil, per paragraf. Isi hanya fakta yang sudah dikonfirmasi trainer. */
+  about: string[];
+  /** Jam melatih. Kosongkan (null) kalau belum ada. */
+  hours: { label: string; opens: string; closes: string } | null;
   /** Link Google Maps gym/trainer, misalnya "https://maps.app.goo.gl/xxxx". */
   mapsUrl: string;
   /** URL lengkap Instagram, misalnya "https://www.instagram.com/namaakun/". */
@@ -43,10 +50,17 @@ export const trainers: Trainer[] = [
     gymAddress:
       "Jl. Lintas Sumatera, Kota Galuh (sebelah Titik Temu Sergai), Perbaungan, Serdang Bedagai",
     whatsapp: "6289527345301",
-    photo: "", // TODO: taruh foto di public/trainers/yusrizal.jpg lalu isi "/trainers/yusrizal.jpg"
+    photo: "/trainers/yusrizal.jpg",
+    gallery: ["/trainers/yusrizal-1.jpg", "/trainers/yusrizal-2.jpg", "/trainers/yusrizal-3.jpg", "/trainers/yusrizal-4.jpg"],
     specialties: [], // TODO: isi sesuai konfirmasi trainer, mis. ["Fat loss", "Muscle gain"]
-    bio: "Personal trainer di FitCube Perbaungan. Hubungi langsung lewat WhatsApp untuk konsultasi program, jadwal, dan biaya.",
-    mapsUrl: "", // TODO: link Google Maps FitCube Perbaungan
+    bio: "Personal trainer di FitCube Perbaungan. Melatih setiap hari pukul 09.00–21.00 WIB. Hubungi langsung lewat WhatsApp untuk konsultasi program, jadwal, dan biaya.",
+    about: [
+      "Yusrizal adalah personal trainer di FitCube Perbaungan, Jl. Lintas Sumatera, Kota Galuh, tepat di sebelah Titik Temu Sergai. Ia melayani sesi latihan pribadi setiap hari pukul 09.00–21.00 WIB untuk warga Perbaungan dan sekitarnya di Serdang Bedagai.",
+      "Berlatih bersama personal trainer membuat program latihan lebih jelas, teknik gerakan lebih benar, dan target lebih terukur, baik untuk menurunkan berat badan, menambah massa otot, maupun menjaga kebugaran. Pemula juga bisa mulai dari nol.",
+      "Mau tanya program, jadwal, atau biaya? Chat Yusrizal langsung lewat WhatsApp di +62 895-2734-5301.",
+    ],
+    hours: { label: "Setiap hari, 09.00–21.00 WIB", opens: "09:00", closes: "21:00" },
+    mapsUrl: "", // TODO: link Google Maps profil Yusrizal (setelah terverifikasi)
     instagram: "", // TODO: URL Instagram Yusrizal (kalau ada)
     figure: "pria",
     heroFace: "", // TODO: foto wajah Yusrizal (dengan izinnya), mis. "/trainers/yusrizal-wajah.jpg"
@@ -55,14 +69,21 @@ export const trainers: Trainer[] = [
   {
     slug: "nurmala-sari",
     name: "Nurmala Sari",
-    gym: "", // TODO: nama gym
-    gymAddress: "", // TODO: alamat gym
+    gym: "FitCube",
+    gymAddress:
+      "Jl. Lintas Sumatera, Kota Galuh (sebelah Titik Temu Sergai), Perbaungan, Serdang Bedagai",
     whatsapp: "6285270579192",
-    photo: "", // TODO: taruh foto di public/trainers/nurmala-sari.jpg lalu isi "/trainers/nurmala-sari.jpg"
+    photo: "/trainers/nurmala-sari.jpg",
+    gallery: ["/trainers/nurmala-sari-1.jpg", "/trainers/nurmala-sari-2.jpg"],
     specialties: [], // TODO: spesialisasi sesuai konfirmasi trainer
-    // TODO: setelah gym diisi, ubah jadi mis. "Personal trainer di [gym] Perbaungan. Hubungi langsung lewat WhatsApp untuk konsultasi program, jadwal, dan biaya."
-    bio: "Personal trainer di Perbaungan, Serdang Bedagai. Hubungi langsung lewat WhatsApp untuk konsultasi program, jadwal, dan biaya.",
-    mapsUrl: "", // TODO: link Google Maps gym
+    bio: "Personal trainer perempuan di FitCube Perbaungan. Melatih setiap hari pukul 09.00–21.00 WIB. Hubungi langsung lewat WhatsApp untuk konsultasi program, jadwal, dan biaya.",
+    about: [
+      "Nurmala Sari adalah personal trainer perempuan di FitCube Perbaungan, Jl. Lintas Sumatera, Kota Galuh, sebelah Titik Temu Sergai. Ia melatih setiap hari pukul 09.00–21.00 WIB dan menjadi pilihan yang pas bagi Anda yang lebih nyaman dilatih oleh trainer perempuan.",
+      "Sesi latihan disesuaikan dengan tujuan dan kondisi masing-masing, mulai dari membentuk badan, menurunkan berat badan, sampai membangun kebiasaan olahraga yang konsisten. Cocok juga untuk pemula yang baru mulai ke gym.",
+      "Untuk tanya program, jadwal, atau biaya, chat Nurmala Sari langsung lewat WhatsApp di +62 852-7057-9192.",
+    ],
+    hours: { label: "Setiap hari, 09.00–21.00 WIB", opens: "09:00", closes: "21:00" },
+    mapsUrl: "", // TODO: link Google Maps profil Nurmala Sari (setelah terverifikasi)
     instagram: "", // TODO: URL Instagram (kalau ada)
     figure: "wanita",
     heroFace: "", // TODO: foto wajah Nurmala Sari (dengan izinnya)
